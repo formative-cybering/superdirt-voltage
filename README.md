@@ -21,7 +21,7 @@ MIDI required!
 ("./superdirt-voltage.scd").load;
 
 // Add this block to enable the new pitch synths
- ~pitchNodes = ~pitchNodes ? IdentityDictionary.new;
+~pitchNodes = ~pitchNodes ? IdentityDictionary.new;
 
 ~dirt.soundLibrary.addSynth(\persistantPitch, (
     play: {
