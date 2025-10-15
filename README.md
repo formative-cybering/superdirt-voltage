@@ -7,7 +7,7 @@ MIDI required!
 
 **2025**
 
-- Persistant Pitch (pitch values are stored in SuperCollider and are no longer dependant on cycle/legato length)
+- Persistent Pitch (pitch values are stored in SuperCollider and are no longer dependant on cycle/legato length)
 - Performance updates
 
 ---
@@ -23,7 +23,7 @@ MIDI required!
 // Add this block to enable the new pitch synths
 ~pitchNodes = ~pitchNodes ? IdentityDictionary.new;
 
-~dirt.soundLibrary.addSynth(\persistantPitch, (
+~dirt.soundLibrary.addSynth(\persistentPitch, (
     play: {
         var out      = (~channel ? 0).asInteger;
         var n        = ~n ? 0;
