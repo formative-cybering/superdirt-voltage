@@ -1,25 +1,4 @@
 (
-
-// PITCH
-SynthDef(\pitch, {
-    | out = 0, channel, n = 0, stepsPerOctave = 12, offsetVolts = 0,
-      portamento = 0.05, curve = 0 |
-    var bus = (channel ? out ? 0),
-        adjustedN = n,
-        slew = portamento,
-        targetVolts, glideTime, slid;
-
-    adjustedN = adjustedN * (stepsPerOctave / 12);
-    adjustedN = adjustedN * ((adjustedN / stepsPerOctave) * (1 / (stepsPerOctave + 1)) / 10);
-    slew = slew + ((slew / stepsPerOctave) * (1 / (stepsPerOctave + 1)) / 10);
-
-    targetVolts = (adjustedN / stepsPerOctave) + offsetVolts;
-    glideTime = slew.max(0);
-
-    slid = K2A.ar(VarLag.kr(targetVolts, glideTime, curve));
-    OffsetOut.ar(bus, slid);
-}).add;
-
 // GATE & TRIGGER
 SynthDef(\gate, {
     | out = 0, channel, sustain = 0.1, rise = 0.0005, fall = 0.0005, volts = 1, amp = 1 |
