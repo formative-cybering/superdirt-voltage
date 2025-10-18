@@ -73,7 +73,7 @@ SynthDef(\persistentPitch, {
 d1 $ n "0 12 24 32" # s "p1"
 ```
 
-#### Old Pitch, with octave quantisation
+#### Old Pitch, with EDO quantisation
 
 ```haskell
 -- change notes per octave on each cycle
