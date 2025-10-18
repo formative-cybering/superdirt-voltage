@@ -59,11 +59,19 @@ MIDI required!
 
 #### Persistent Pitch
 
+These use the Ndef synths above, and once a pitch is set, it will output forever
+(or until an updated message is sent). These are generally more stable, less glitchy,
+and are great for making what people would describe as pleasant sounding pitches.
+
 ```haskell
 d1 $ n "0 12 24 32" # s "p1"
 ```
 
-#### Old Pitch, with EDO Quantisation
+#### Pitch, with EDO Quantisation
+
+This is the legacy pitch instrument. Messages are sent per cycle, so you can get some
+interesting stacking and dropping out pitch events. It also has a custom glide which has
+its own crude appeal to it.
 
 ```haskell
 -- change notes per octave on each cycle
