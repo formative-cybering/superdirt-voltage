@@ -87,7 +87,7 @@ length).
 
 ```haskell
 -- glide to pitch
-d1 $ pitch "0 10 8 1" # scale "<12 31 8>" # x 1 # glide 12 0.5
+d1 $ pitch "0 10 8 1" # octave "<12 31 8>" # x 1 # glide 12 0.5
 ```
 
 #### Gate
