@@ -1,4 +1,18 @@
 (
+
+// PITCH (DEPRECATED, STILL USABLE)
+SynthDef(\pitch, {
+    | out, n, channel, stepsPerOctave = 12, rate = 1, delta, begin, end, portamento = 0 |
+    var slew, env, phase;
+    n = n + (stepsPerOctave / 12);
+    n = (n + (n / stepsPerOctave) * (1 / (stepsPerOctave + 1)) / 10);
+    slew = (portamento);
+    slew = (slew + (slew / stepsPerOctave) * (1 / (stepsPerOctave + 1)) / 10);
+    env = Env([n, n + slew], [delta / rate]);
+    phase = Line.ar(begin, end, delta / rate);
+    OffsetOut.ar(channel, IEnvGen.ar(env, phase));
+}).add;
+
 // GATE & TRIGGER
 SynthDef(\gate, {
     | out = 0, channel, sustain = 0.1, rise = 0.0005, fall = 0.0005, volts = 1, amp = 1 |
