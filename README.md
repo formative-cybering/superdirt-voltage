@@ -18,42 +18,48 @@ MIDI required!
 
 ```supercollider
 // ensure you update to the correct path on your machine
-("./superdirt-voltage.scd").load;
+("/home/slash/.config/SuperCollider/superdirt-voltage.scd").load;
 
-// Add this block to enable the new pitch synths
-~pitchNodes = ~pitchNodes ? IdentityDictionary.new;
+// new pitch synth
+SynthDef(\pitch, {
+  | out,
+  channel = 0,
+  freq = 220,
+  portamento = 0 |
+  var n = Lag.ar(log2(K2A.ar(freq)/440), portamento);
+  var sig = LinLin.ar(n, -1, 9, 0, 1);
+  OffsetOut.ar(channel, [sig]);
+}).add;
 
-~dirt.soundLibrary.addSynth(\persistentPitch, (
-    play: {
-        var out      = (~channel ? 0).asInteger;
-        var n        = ~n ? 0;
-        var port     = ~portamento ? 0.05;
-        var steps    = ~stepsPerOctave ? 12;
-        var offset   = ~offsetVolts ? 0;
-        var curve    = ~curve ? 0;
+s.sync;
 
-        if (~pitchNodes[out].isNil or: { ~pitchNodes[out].isRunning.not }) {
-            ~pitchNodes[out] = Synth(\pitch, [
-                \out, out,
-                \n, n,
-                \stepsPerOctave, steps,
-                \offsetVolts, offset,
-                \portamento, port,
-                \curve, curve
-            ]);
-        } {
-            s.sendBundle(s.latency, {
-                ~pitchNodes[out].set(
-                    \n, n,
-                    \stepsPerOctave, steps,
-                    \offsetVolts, offset,
-                    \portamento, port,
-                    \curve, curve
-                );
-            });
-        };
-    }
-));
+// define how many pitch cv channels you want
+~cv_ndefs = 8.collect { |i|
+    var name = (\cv_np ++ i).asSymbol;
+    Ndef(name).source = \pitch;
+    Ndef(name).set(\channel, i);
+    Ndef(name);
+};
+
+// add to dirt library, 8 synths p1 to p8
+8.do { |i|
+    var name = (\p ++ (i + 1)).asSymbol;
+    var cv = (\cv_np ++ i).asSymbol;
+    ~dirt.soundLibrary.addSynth((name).asSymbol, (play: {
+        var latency = (~latency ? 0);
+        var freq = ~freq;
+        var channel = i;
+        var portamento = ~portamento;
+        var ndef = Ndef(cv).wakeUp;
+        ndef.wakeUp;
+        // schedule the cycles, prevents delayed signals
+        thisThread.clock.sched(latency - 0.025, {
+            ndef.set(\portamento, portamento);
+            ndef.set(\channel, channel);
+            ndef.set(\freq, freq);
+        });
+    }));
+};
 ```
 
 2: Evaluate `voltage.tidal` (or add to your `bootTidal.hs` config)
