@@ -22,6 +22,7 @@ MIDI required!
 
 // new pitch synth
 // set your channels for pitch synths here
+// they will be usable at p1 and p2
 ~pitchChannels = [1, 2];
 
 SynthDef(\persistentPitch, {
