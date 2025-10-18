@@ -21,7 +21,10 @@ MIDI required!
 ("/home/slash/.config/SuperCollider/superdirt-voltage.scd").load;
 
 // new pitch synth
-SynthDef(\pitch, {
+// set your channels for pitch synths here
+~pitchChannels = [1, 2];
+
+SynthDef(\persistentPitch, {
   | out,
   channel = 0,
   freq = 220,
@@ -31,24 +34,21 @@ SynthDef(\pitch, {
   OffsetOut.ar(channel, [sig]);
 }).add;
 
-s.sync;
-
-// define how many pitch cv channels you want
-~cv_ndefs = 8.collect { |i|
-    var name = (\cv_np ++ i).asSymbol;
-    Ndef(name).source = \pitch;
-    Ndef(name).set(\channel, i);
+~cv_ndefs = ~pitchChannels.collect { |i|
+    var channel = ~pitchChannels[i];
+    var name = (\cv_np ++ channel).asSymbol;
+    Ndef(name).source = \persistentPitch;
+    Ndef(name).set(\channel, channel);
     Ndef(name);
 };
 
-// add to dirt library, 8 synths p1 to p8
-8.do { |i|
-    var name = (\p ++ (i + 1)).asSymbol;
-    var cv = (\cv_np ++ i).asSymbol;
+~pitchChannels.do { |i|
+    var channel = ~pitchChannels[i];
+    var name = (\p ++ channel).asSymbol;
+    var cv = (\cv_np ++ channel).asSymbol;
     ~dirt.soundLibrary.addSynth((name).asSymbol, (play: {
         var latency = (~latency ? 0);
         var freq = ~freq;
-        var channel = i;
         var portamento = ~portamento;
         var ndef = Ndef(cv).wakeUp;
         ndef.wakeUp;
@@ -66,7 +66,13 @@ s.sync;
 
 ---
 
-#### Pitch, with octave quantisation
+#### Persistent Pitch
+
+```haskell
+d1 $ n "0 12 24 32" # s "p1"
+```
+
+#### Old Pitch, with octave quantisation
 
 ```haskell
 -- change notes per octave on each cycle
