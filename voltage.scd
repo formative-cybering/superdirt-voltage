@@ -1,5 +1,13 @@
 (
 
+// PERSISTENT PITCH
+SynthDef(\persistentPitch, {
+    | out, channel = 0, freq = 220, portamento = 0 |
+    var n = Lag.ar(log2(K2A.ar(freq)/440), portamento);
+    var sig = LinLin.ar(n, -1, 9, 0, 1);
+    OffsetOut.ar(channel, [sig]);
+}).add;
+
 // PITCH (DEPRECATED, STILL USABLE)
 SynthDef(\pitch, {
     | out, n, channel, stepsPerOctave = 12, rate = 1, delta, begin, end, portamento = 0 |
