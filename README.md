@@ -63,7 +63,7 @@ MIDI required!
 d1 $ n "0 12 24 32" # s "p1"
 ```
 
-#### Old Pitch, with EDO quantisation
+#### Old Pitch, with EDO Quantisation
 
 ```haskell
 -- change notes per octave on each cycle
@@ -92,7 +92,7 @@ d2 $ gate "0 1 0 0 1 1 1" # x 2
 `gate` will take a 0/1 pattern and return +5v signals for the `1` values. Use
 `-1` if you need a -5v.
 
-#### Voltage automation
+#### Voltage
 
 ```haskell
 -- create stepped automation
